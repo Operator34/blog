@@ -1,0 +1,80 @@
+@import "../../styles/variables" ;
+
+.postContainer{
+    display: flex;
+    justify-content: space-between;
+    width: 938px;   
+    height: 140px;
+    background-color: #fff;
+    box-shadow: $boxShadow;
+    margin-bottom: 26px;
+    border-radius: 5px;
+    padding: 15px;
+    .post{
+        display: flex;
+        flex-direction: column;
+        justify-content: space-around;
+        .titleLike{
+            display: flex;
+            flex-direction: row;
+            color: $info-color;
+            font-size: $fontSizeTitle;
+            
+            .title{margin-right: 13px; text-decoration: none; color: inherit;}
+            .btn{
+                all: unset;
+                margin-right: 3px;
+
+            }
+            .countLike{
+                font-size: 12px;
+                line-height: 22px;
+                color:$mainTextColor
+            }
+        }
+        .tags{
+            display: flex;
+            
+            .tag{
+                height: 20px;
+                border: 1px solid black;
+                border-radius: 5px;
+                margin-right: 5px;
+                padding: 3px 5px;
+            }
+        }
+        
+        .postDescription{
+            text-align: start;
+        }
+    }
+    .user{
+        display: flex;
+        height: 46px;
+        flex-basis: 15%;
+        .userInfo{
+            flex-direction: column;
+            margin-right: 12px;
+            .name{
+                //font-family: Inter UI;
+                font-size: 18px;
+                line-height: 28px;
+                letter-spacing: 0em;
+                text-align: left;
+            }
+            .date{
+                //font-family: Inter UI;
+                font-size: 12px;
+                line-height: 22px;
+                letter-spacing: 0px;
+                text-align: left;
+                opacity: 50%;
+            }
+        }
+        .userAvatar{
+            width: 46px;
+            height: 46px;
+            border-radius: 50%;
+        }
+    }
+}
