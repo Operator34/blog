@@ -43,7 +43,7 @@
         display: flex;
         justify-content: space-between;
         align-items: center; 
-        flex-basis: 25%;
+        // flex-basis: 30%;
         .createArticle{
             color: inherit;
             text-decoration: none;
@@ -64,6 +64,7 @@
 
         }
         .user{
+            margin-left: 20px;
             color: inherit;
             text-decoration: none;
             display: flex;
@@ -80,6 +81,7 @@
         }
         .btnLogOut{
             background-color: transparent;
+            margin-left: 20px;
             width: 109px;
             height: 51px;
             border-radius: 5px;

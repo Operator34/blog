@@ -16,7 +16,7 @@ const SignUp = () => {
     watch,
     setValue,
     formState: { errors, isValid },
-  } = useForm({ mode: 'onTouched' });
+  } = useForm({ mode: 'onChange' });
 
   //console.log(errors);
   // console.log(watch().checkbox);

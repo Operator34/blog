@@ -7,3 +7,14 @@ export const removeEmptyFields = (obj) => {
   });
   return result;
 };
+
+export const conversionStr = (str, maxLength) => {
+  if (!str) {
+    return str;
+  } else if (str.length > maxLength) {
+    let newStr = str.slice(0, maxLength).trim();
+    const regexp = /\b\w+$|,$/gm;
+    newStr = newStr.replace(regexp, '...');
+    return newStr;
+  } else return str;
+};

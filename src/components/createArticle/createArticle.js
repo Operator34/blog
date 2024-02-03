@@ -1,5 +1,6 @@
 import React, { Fragment, useEffect, useState } from 'react';
 import { useForm, useFieldArray, Controller } from 'react-hook-form';
+import { v4 as uuidv4 } from 'uuid';
 import { useSelector } from 'react-redux';
 import { Button } from 'antd';
 import { useNavigate } from 'react-router';
@@ -24,7 +25,7 @@ const CreateArticle = () => {
     handleSubmit,
     control,
     formState: { errors, isValid },
-  } = useForm({ mode: 'onTouched' });
+  } = useForm({ mode: 'onChange' });
 
   const { fields, append, remove } = useFieldArray({
     control,
@@ -40,7 +41,8 @@ const CreateArticle = () => {
     console.log(errors);
     setTag(event.target.value);
   };
-  const removeTag = (index) => () => {
+  const removeTag = (index) => {
+    console.log(typeof index);
     remove(index);
   };
   const onSubmit = (data) => {
@@ -65,7 +67,7 @@ const CreateArticle = () => {
             className={s.input}
             {...register('title', {
               required: 'Title is required',
-              maxLength: { value: 45, message: 'Title must contain no more than 45 characters' },
+              maxLength: { value: 65, message: 'Title must contain no more than 65 characters' },
             })}
             type="text"
             id="title"
@@ -81,7 +83,7 @@ const CreateArticle = () => {
             className={s.input}
             {...register('description', {
               required: 'Short description is required',
-              maxLength: { value: 100, message: 'Short description must contain no more than 100 characters' },
+              maxLength: { value: 150, message: 'Short description must contain no more than 150 characters' },
             })}
             type="text"
             id="description"
@@ -97,7 +99,7 @@ const CreateArticle = () => {
             className={s.textarea}
             {...register('body', {
               required: 'Description is required',
-              maxLength: { value: 750, message: 'Description must contain no more than 750 characters' },
+              maxLength: { value: 1100, message: 'Description must contain no more than 1100 characters' },
             })}
             type="text"
             id="body"
@@ -112,14 +114,14 @@ const CreateArticle = () => {
           </label>
 
           {fields.map((item, index) => (
-            <Fragment key={index}>
+            <Fragment key={uuidv4()}>
               <div className={s.inputBtn}>
                 <Controller
                   render={({ field }) => <p className={s.textTag}>{field.value}</p>}
                   name={`tagList[${index}]`}
                   control={control}
                 />
-                <Button onClick={removeTag(index)} className={s.btn} danger>
+                <Button onClick={() => removeTag(index)} className={s.btn} danger>
                   Delete
                 </Button>
               </div>

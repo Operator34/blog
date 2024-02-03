@@ -42,7 +42,7 @@ export const registerUser = (username, email, password) => {
 };
 
 export const loginUser = (email, password) => {
-  return axios.post(`${apiBase}/users/login`, { user: { email, password } }).then((res) => {
+  return axios.post(`${apiBase}/users/login`, { user: { email: email.toLowerCase(), password } }).then((res) => {
     console.log('loginUser', res);
     return res;
   });

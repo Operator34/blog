@@ -3,6 +3,7 @@ import { useForm, useFieldArray, Controller } from 'react-hook-form';
 import { useSelector } from 'react-redux';
 import { Button } from 'antd';
 import { useNavigate, useParams } from 'react-router';
+import { v4 as uuidv4 } from 'uuid';
 
 import { getArticleId, updateAnArticle } from '../../service/requestService';
 
@@ -50,7 +51,7 @@ const EditArticle = () => {
     setTag(event.target.value);
   };
 
-  const removeTag = (index) => () => {
+  const removeTag = (index) => {
     remove(index);
   };
 
@@ -76,7 +77,7 @@ const EditArticle = () => {
             className={s.input}
             {...register('title', {
               required: 'Title is required',
-              maxLength: { value: 45, message: 'Title must contain no more than 45 characters' },
+              maxLength: { value: 65, message: 'Title must contain no more than 65 characters' },
             })}
             type="text"
             id="title"
@@ -92,7 +93,7 @@ const EditArticle = () => {
             className={s.input}
             {...register('description', {
               required: 'Short description is required',
-              maxLength: { value: 100, message: 'Short description must contain no more than 100 characters' },
+              maxLength: { value: 150, message: 'Short description must contain no more than 150 characters' },
             })}
             type="text"
             id="description"
@@ -108,7 +109,7 @@ const EditArticle = () => {
             className={s.textarea}
             {...register('body', {
               required: 'Description is required',
-              maxLength: { value: 750, message: 'Description must contain no more than 750 characters' },
+              maxLength: { value: 1100, message: 'Description must contain no more than 1100 characters' },
             })}
             type="text"
             id="body"
@@ -123,14 +124,14 @@ const EditArticle = () => {
           </label>
 
           {fields.map((item, index) => (
-            <Fragment key={index}>
+            <Fragment key={uuidv4()}>
               <div className={s.inputBtn}>
                 <Controller
                   render={({ field }) => <p className={s.textTag}>{field.value}</p>}
                   name={`tagList[${index}]`}
                   control={control}
                 />
-                <Button onClick={removeTag(index)} className={s.btn} danger>
+                <Button onClick={() => removeTag(index)} className={s.btn} danger>
                   Delete
                 </Button>
               </div>

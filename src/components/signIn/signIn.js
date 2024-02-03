@@ -17,7 +17,7 @@ const SignIn = () => {
     register,
     handleSubmit,
     formState: { errors, isValid },
-  } = useForm({ mode: 'onTouched' });
+  } = useForm({ mode: 'onChange' });
 
   //console.log(errors);
   const onSubmit = (data) => {

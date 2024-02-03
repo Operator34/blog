@@ -46,8 +46,8 @@ const Article = ({ article }) => {
             <p className={s.title}>{article.title}</p>
             <button className={s.btn}>
               <img src={heart} alt="Like" />
+              <p className={s.countLike}>{article.favoritesCount}</p>
             </button>
-            <p className={s.countLike}>{article.favoritesCount}</p>
           </div>
           <div className={s.tags}>
             {

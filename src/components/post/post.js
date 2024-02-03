@@ -2,18 +2,23 @@ import React from 'react';
 import { format } from 'date-fns';
 import { Link } from 'react-router-dom';
 
-import heart from './heart.svg';
+import { conversionStr } from '../../service/helpFunction';
+
 import defaultAvatar from './defaultAvatar.png';
+import heart from './heart.svg';
 import s from './post.module.scss';
 
 const Post = ({ article }) => {
+  const { tagList = [] } = article;
+  console.log(tagList);
+  const articleTagList = tagList.filter((tag, index) => index < 10);
   return (
     <article className={s.postContainer}>
       <div className={s.post}>
         <div className={s.titleLike}>
           <p className={s.title}>
             <Link className={s.title} to={`articles/${article.slug}`}>
-              {article.title}
+              {conversionStr(article.title, 65)}
             </Link>
           </p>
           <button className={s.btn}>
@@ -24,8 +29,8 @@ const Post = ({ article }) => {
         <div className={s.tags}>
           {
             /* eslint-disable */
-            article.tagList.length
-              ? article.tagList.map((tag, index) => (
+            articleTagList.length
+              ? articleTagList.map((tag, index) => (
                   <div key={index} className={s.tag}>
                     {tag}
                   </div>
@@ -34,7 +39,7 @@ const Post = ({ article }) => {
             /* eslint-disable */
           }
         </div>
-        <p className={s.postDescription}>{article.description}</p>
+        <p className={s.postDescription}>{conversionStr(article.description, 300)}</p>
       </div>
       <div className={s.user}>
         <div className={s.userInfo}>
