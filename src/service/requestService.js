@@ -1,7 +1,10 @@
 import axios from 'axios';
 import Cookies from 'js-cookie';
-
+import { message } from 'antd';
 const apiBase = 'https://blog.kata.academy/api';
+const headers = {
+  Authorization: `Token ${Cookies.get('Token_Authorization')}`,
+};
 
 export const getAllArticles = (page = 1, limit = 10) => {
   console.log(page, limit);
@@ -17,17 +20,27 @@ export const getAllArticles = (page = 1, limit = 10) => {
       num = page * limit - limit + 1;
       break;
   }
-  return axios.get(`${apiBase}/articles?limit=${limit}&offset=${num}`).then((res) => {
-    return res;
-  });
+  return axios
+    .get(`${apiBase}/articles?limit=${limit}&offset=${num}`)
+    .then((res) => {
+      return res;
+    })
+    .catch((err) => {
+      console.error('Error in getAllArticles:', err);
+      throw err;
+    });
 };
 
 export const getArticleId = (id) => {
-  console.log('getArticleId', id);
-  return axios.get(`${apiBase}/articles/${id}`).then((res) => {
-    console.log(res);
-    return res;
-  });
+  return axios
+    .get(`${apiBase}/articles/${id}`)
+    .then((res) => {
+      return res;
+    })
+    .catch((err) => {
+      console.error('Error in getArticleId:', err);
+      throw err;
+    });
 };
 
 export const registerUser = (username, email, password) => {
@@ -36,16 +49,24 @@ export const registerUser = (username, email, password) => {
       user: { username, email, password },
     })
     .then((res) => {
-      console.log('registerUser', res);
       return res;
+    })
+    .catch((err) => {
+      console.error('Error in registerUser:', err);
+      throw err;
     });
 };
 
 export const loginUser = (email, password) => {
-  return axios.post(`${apiBase}/users/login`, { user: { email: email.toLowerCase(), password } }).then((res) => {
-    console.log('loginUser', res);
-    return res;
-  });
+  return axios
+    .post(`${apiBase}/users/login`, { user: { email: email.toLowerCase(), password } })
+    .then((res) => {
+      return res;
+    })
+    .catch((err) => {
+      console.error('Error in loginUser:', err);
+      message.info('Неверный логин или пароль');
+    });
 };
 
 export const updateCurrentUser = (user) => {
@@ -56,39 +77,45 @@ export const updateCurrentUser = (user) => {
         user: { ...user },
       },
       {
-        headers: {
-          Authorization: `Token ${Cookies.get('Token_Authorization')}`,
-        },
+        headers,
       }
     )
     .then((res) => {
-      console.log('updateUser', res);
       return res;
+    })
+    .catch((err) => {
+      console.error('Error in updateCurrentUser:', err);
+      throw err;
     });
 };
 
 export const getProfile = (username) => {
-  return axios.get(`${apiBase}/profiles/${username}`).then((res) => {
-    console.log(res);
-    return res;
-  });
+  return axios
+    .get(`${apiBase}/profiles/${username}`)
+    .then((res) => {
+      return res;
+    })
+    .catch((err) => {
+      console.error('Error in getProfile:', err);
+      throw err;
+    });
 };
 
 export const getCurrentUser = () => {
   return axios
     .get(`${apiBase}/user`, {
-      headers: {
-        Authorization: `Token ${Cookies.get('Token_Authorization')}`,
-      },
+      headers,
     })
     .then((res) => {
-      console.log('getCurrentUser', res);
       return res;
+    })
+    .catch((err) => {
+      console.error('Error in getCurrentUser:', err);
+      throw err;
     });
 };
 
 export const createAnArticle = (article) => {
-  console.log('createAnArticle', article);
   return axios
     .post(
       `${apiBase}/articles`,
@@ -96,19 +123,19 @@ export const createAnArticle = (article) => {
         article: { ...article },
       },
       {
-        headers: {
-          Authorization: `Token ${Cookies.get('Token_Authorization')}`,
-        },
+        headers,
       }
     )
     .then((res) => {
-      console.log('createAnArticle', res);
       return res;
+    })
+    .catch((err) => {
+      console.error('Error in createAnArticle:', err);
+      throw err;
     });
 };
 
 export const updateAnArticle = (slug, article) => {
-  console.log('updateAnArticle', slug, article);
   return axios
     .put(
       `${apiBase}/articles/${slug}`,
@@ -116,27 +143,26 @@ export const updateAnArticle = (slug, article) => {
         article: { ...article },
       },
       {
-        headers: {
-          Authorization: `Token ${Cookies.get('Token_Authorization')}`,
-        },
+        headers,
       }
     )
     .then((res) => {
-      console.log('updateAnArticle', res);
       return res;
+    })
+    .catch((err) => {
+      console.error('Error in updateAnArticle:', err);
+      throw err;
     });
 };
 
 export const deleteAnArticle = (slug) => {
-  console.log('deleteAnArticle', slug);
   return axios
     .delete(`${apiBase}/articles/${slug}`, {
-      headers: {
-        Authorization: `Token ${Cookies.get('Token_Authorization')}`,
-      },
+      headers,
     })
-    .then((res) => {
-      console.log(res);
-      return res;
+    .then((res) => res)
+    .catch((err) => {
+      console.error('Error in updateAnArticle:', err);
+      throw err;
     });
 };

@@ -10,7 +10,6 @@ import s from './post.module.scss';
 
 const Post = ({ article }) => {
   const { tagList = [] } = article;
-  console.log(tagList);
   const articleTagList = tagList.filter((tag, index) => index < 10);
   return (
     <article className={s.postContainer}>
