@@ -1,11 +1,11 @@
 import React, { Fragment, useEffect, useState } from 'react';
 import { useForm, useFieldArray, Controller } from 'react-hook-form';
 import { useSelector } from 'react-redux';
-import { Button } from 'antd';
+import { Button, message } from 'antd';
 import { useNavigate, useParams } from 'react-router';
 import { v4 as uuidv4 } from 'uuid';
 
-import { getArticleId, updateAnArticle } from '../../service/requestService';
+import { getArticleId, updateAnArticle, errorHandling } from '../../service/requestService';
 
 import s from './editArticle.module.scss';
 
@@ -40,14 +40,11 @@ const EditArticle = () => {
     name: 'tagList',
   });
   const addTag = () => {
-    console.log(tag);
     append(tag);
     setTag('');
   };
 
   const onChangeTag = (event) => {
-    console.log(event.target.value);
-    console.log(errors);
     setTag(event.target.value);
   };
 
@@ -56,10 +53,11 @@ const EditArticle = () => {
   };
 
   const onSubmit = (data) => {
-    console.log('dataOnsubmit', data);
     updateAnArticle(slug, data).then((res) => {
-      console.log(res);
-      if (res.status === 200) {
+      if (res instanceof Error) {
+        errorHandling(res);
+      } else {
+        message.success('Post updated');
         navigate('/');
       }
     });

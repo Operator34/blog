@@ -2,9 +2,10 @@ import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
+import { message } from 'antd';
 
 import { updateUser } from '../../store/mainReducer';
-import { updateCurrentUser } from '../../service/requestService';
+import { errorHandling, updateCurrentUser } from '../../service/requestService';
 import { removeEmptyFields } from '../../service/helpFunction';
 
 import s from './profile.module.scss';
@@ -22,30 +23,33 @@ const Profile = () => {
   } = useForm({ mode: 'onTouched' });
 
   useEffect(() => {
-    setValue('userName', user.username);
+    setValue('username', user.username);
     setValue('email', user.email);
   }, [user]);
 
   const onSubmit = (data) => {
-    console.log('onSubmit', data);
+    // console.log('onSubmit', data);
     const filterData = removeEmptyFields(data);
     updateCurrentUser(filterData).then((res) => {
-      console.log(res);
-      dispatch(updateUser(res.data.user));
+      if (res instanceof Error) {
+        errorHandling(res);
+      } else {
+        dispatch(updateUser(res.data.user));
+        message.success('Profile updated');
+        navigate('/');
+      }
     });
-    navigate('/');
   };
-
   return (
     <div className={s.profile}>
       <h3>Edit profile</h3>
       <form onSubmit={handleSubmit((data) => onSubmit(data))} className={s.form}>
-        <label className={s.label} htmlFor="userName">
+        <label className={s.label} htmlFor="username">
           Username
         </label>
         <input
           className={s.input}
-          {...register('userName', {
+          {...register('username', {
             required: 'Username is required',
             minLength: { value: 3, message: 'Username must have at least 3 characters' },
             maxLength: { value: 20, message: 'Username must contain no more than 20 characters' },

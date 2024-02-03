@@ -2,10 +2,10 @@ import React, { Fragment, useEffect, useState } from 'react';
 import { useForm, useFieldArray, Controller } from 'react-hook-form';
 import { v4 as uuidv4 } from 'uuid';
 import { useSelector } from 'react-redux';
-import { Button } from 'antd';
+import { Button, message } from 'antd';
 import { useNavigate } from 'react-router';
 
-import { createAnArticle } from '../../service/requestService';
+import { createAnArticle, errorHandling } from '../../service/requestService';
 
 import s from './createArticle.module.scss';
 
@@ -37,19 +37,17 @@ const CreateArticle = () => {
     setTag('');
   };
   const onChangeTag = (event) => {
-    console.log(event.target.value);
-    console.log(errors);
     setTag(event.target.value);
   };
   const removeTag = (index) => {
-    console.log(typeof index);
     remove(index);
   };
   const onSubmit = (data) => {
-    console.log('dataOnsubmit', data);
     createAnArticle(data).then((res) => {
-      console.log(res);
-      if (res.status === 200) {
+      if (res instanceof Error) {
+        errorHandling(res);
+      } else {
+        message.success('Post created');
         navigate('/');
       }
     });

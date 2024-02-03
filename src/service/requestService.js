@@ -5,9 +5,13 @@ const apiBase = 'https://blog.kata.academy/api';
 const headers = {
   Authorization: `Token ${Cookies.get('Token_Authorization')}`,
 };
-
+export const errorHandling = (err) => {
+  const errorString = Object.entries(err.response.data.errors)
+    .map(([key, value]) => `${key}: ${value}`)
+    .join(', ');
+  message.error(`Error ${err.response.status}: ${errorString}`);
+};
 export const getAllArticles = (page = 1, limit = 10) => {
-  console.log(page, limit);
   let num = 0;
   switch (page) {
     case 1:
@@ -21,7 +25,7 @@ export const getAllArticles = (page = 1, limit = 10) => {
       break;
   }
   return axios
-    .get(`${apiBase}/articles?limit=${limit}&offset=${num}`)
+    .get(`${apiBase}/articles?limit=${limit}&offset=${num}`, { headers })
     .then((res) => {
       return res;
     })
@@ -33,7 +37,7 @@ export const getAllArticles = (page = 1, limit = 10) => {
 
 export const getArticleId = (id) => {
   return axios
-    .get(`${apiBase}/articles/${id}`)
+    .get(`${apiBase}/articles/${id}`, { headers })
     .then((res) => {
       return res;
     })
@@ -61,11 +65,13 @@ export const loginUser = (email, password) => {
   return axios
     .post(`${apiBase}/users/login`, { user: { email: email.toLowerCase(), password } })
     .then((res) => {
+      if (res.status === 200) {
+        message.success('Authorization was successful');
+      }
       return res;
     })
     .catch((err) => {
-      console.error('Error in loginUser:', err);
-      message.info('Неверный логин или пароль');
+      return err;
     });
 };
 
@@ -77,15 +83,16 @@ export const updateCurrentUser = (user) => {
         user: { ...user },
       },
       {
-        headers,
+        headers: {
+          Authorization: `Token ${Cookies.get('Token_Authorization')}`,
+        },
       }
     )
     .then((res) => {
       return res;
     })
     .catch((err) => {
-      console.error('Error in updateCurrentUser:', err);
-      throw err;
+      return err;
     });
 };
 
@@ -130,8 +137,7 @@ export const createAnArticle = (article) => {
       return res;
     })
     .catch((err) => {
-      console.error('Error in createAnArticle:', err);
-      throw err;
+      return err;
     });
 };
 
@@ -162,7 +168,50 @@ export const deleteAnArticle = (slug) => {
     })
     .then((res) => res)
     .catch((err) => {
-      console.error('Error in updateAnArticle:', err);
-      throw err;
+      return err;
     });
+};
+
+// export const favoriteAnArticle = (slug) => {
+//   return axios
+//     .post(
+//       `${apiBase}/articles/${slug}/favorite`,
+//       {},
+//       {
+//         headers: {
+//           Authorization: `Token ${Cookies.get('Token_Authorization')}`,
+//         },
+//       }
+//     )
+//     .then((res) => res)
+//     .catch((err) => err);
+// };
+
+// export const unFavoriteAnArticle = (slug) => {
+//   return axios
+//     .delete(
+//       `${apiBase}/articles/${slug}/favorite`,
+//       {},
+//       {
+//         headers: {
+//           Authorization: `Token ${Cookies.get('Token_Authorization')}`,
+//         },
+//       }
+//     )
+//     .then((res) => res)
+//     .catch((err) => err);
+// };
+
+export const toggleFavoriteArticle = (slug, method) => {
+  const requestConfig = {
+    method,
+    url: `${apiBase}/articles/${slug}/favorite`,
+    headers: {
+      Authorization: `Token ${Cookies.get('Token_Authorization')}`,
+    },
+  };
+
+  return axios(requestConfig)
+    .then((res) => res)
+    .catch((err) => err);
 };

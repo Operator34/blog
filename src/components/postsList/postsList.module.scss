@@ -2,6 +2,11 @@
     margin-top: 26px;
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
+    min-height: 100vh;
+    .pagination{
+        align-self: flex-end;
+    }
+
 }

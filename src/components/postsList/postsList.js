@@ -14,7 +14,6 @@ const PostsList = () => {
   const dispatch = useDispatch();
   const dispatchArticles = (offset, pageSize) => {
     getAllArticles(offset, pageSize).then((res) => {
-      //console.log(res.data.articles);
       dispatch(addAllArticles(res.data.articles));
       setArticlesCount(res.data.articlesCount.toString());
     });
@@ -31,7 +30,7 @@ const PostsList = () => {
   return (
     <div className={s.postsList}>
       {articles.length ? article : <Spinner />}
-      <PaginationPost articlesCount={articlesCount} dispatchArticles={dispatchArticles} />
+      <PaginationPost className={s.pagination} articlesCount={articlesCount} dispatchArticles={dispatchArticles} />
     </div>
   );
 };

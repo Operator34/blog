@@ -5,10 +5,12 @@ import { useSelector } from 'react-redux';
 import Markdown from 'markdown-to-jsx';
 import { format } from 'date-fns';
 
-import { deleteAnArticle, getArticleId } from '../../service/requestService';
+import { deleteAnArticle, getArticleId, errorHandling, toggleFavoriteArticle } from '../../service/requestService';
 import Spinner from '../spin/spinner';
 
 import heart from './heart.svg';
+import heartOn from './heartOn.svg';
+
 import defaultAvatar from './defaultAvatar.png';
 import s from './postDescription.module.scss';
 
@@ -20,33 +22,44 @@ const PostDescription = () => {
       setArticle(res.data.article);
     });
   }, []);
-  console.log(article);
   return <>{article ? <Article article={article} /> : <Spinner />}</>;
 };
 
 const Article = ({ article }) => {
+  const [likeCount, setLikeCount] = useState(article.favoritesCount);
+  const [like, setLike] = useState(article.favorited);
   const navigate = useNavigate();
   const userName = useSelector((state) => state.main.user.username);
   const isCurrentUserArticle = userName === article.author.username;
 
+  const onClickFavorite = (slug) => {
+    const method = like ? 'delete' : 'post';
+    toggleFavoriteArticle(slug, method).then((res) => console.log(res));
+    setLikeCount((prev) => (prev = like ? prev - 1 : prev + 1));
+    setLike((prev) => !prev);
+  };
+
   const onDelete = (article) => {
-    console.log(article);
     deleteAnArticle(article.slug).then((res) => {
-      if (res.status === 204) {
+      if (res instanceof Error) {
+        errorHandling(res);
+      } else {
         message.success('This post has been deleted');
       }
     });
     navigate('/');
   };
+
+  const imgLike = like ? heartOn : heart;
   return (
     <article className={s.postWrapper}>
       <div className={s.postContainer}>
         <div className={s.post}>
           <div className={s.titleLike}>
             <p className={s.title}>{article.title}</p>
-            <button className={s.btn}>
-              <img src={heart} alt="Like" />
-              <p className={s.countLike}>{article.favoritesCount}</p>
+            <button onClick={() => onClickFavorite(article.slug)} className={s.btn}>
+              <img src={imgLike} alt="Like" />
+              <p className={s.countLike}>{likeCount}</p>
             </button>
           </div>
           <div className={s.tags}>

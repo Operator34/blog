@@ -1,13 +1,14 @@
 import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
+import { message } from 'antd';
+import Cookies from 'js-cookie';
 
 import { getCurrentUser, getProfile } from '../../service/requestService';
 import defaultAvatar from '../post/defaultAvatar.png';
 import { updateUser, logoutUser } from '../../store/mainReducer';
 
 import s from './appHeader.module.scss';
-import Cookies from 'js-cookie';
 
 const AppHeader = () => {
   const dispatch = useDispatch();
@@ -19,12 +20,10 @@ const AppHeader = () => {
   useEffect(() => {
     if (isLogged) {
       getProfile(user.username).then((res) => {
-        // console.log('getProfile', res.data);
         dispatch(updateUser(res.data.profile));
       });
     } else if (Cookies.get('Token_Authorization')) {
       getCurrentUser().then((res) => {
-        // console.log('getProfile', res.data);
         dispatch(updateUser(res.data.user));
       });
     }
@@ -73,6 +72,7 @@ const GroupAuth = ({ user }) => {
   const onLogout = () => {
     Cookies.remove('Token_Authorization');
     dispatch(logoutUser());
+    message.success('Logout success');
   };
   return (
     <div className={s.groupAuth}>

@@ -5,7 +5,7 @@ import Cookies from 'js-cookie';
 import { useDispatch } from 'react-redux';
 
 import { addLoginUser } from '../../store/mainReducer';
-import { loginUser } from '../../service/requestService';
+import { loginUser, errorHandling } from '../../service/requestService';
 
 import s from './signIn.module.scss';
 
@@ -19,14 +19,17 @@ const SignIn = () => {
     formState: { errors, isValid },
   } = useForm({ mode: 'onChange' });
 
-  //console.log(errors);
   const onSubmit = (data) => {
     const { email, password } = data;
     loginUser(email, password).then((res) => {
-      Cookies.set('Token_Authorization', `${res.data.user.token}`);
-      dispatch(addLoginUser(res.data.user));
-      if (res.status === 200) {
-        navigate('/');
+      if (res instanceof Error) {
+        errorHandling(res);
+      } else {
+        Cookies.set('Token_Authorization', `${res.data.user.token}`);
+        dispatch(addLoginUser(res.data.user));
+        if (res.status === 200) {
+          navigate('/');
+        }
       }
     });
   };
