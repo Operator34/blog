@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams, Link } from 'react-router-dom';
+import { Button, Popconfirm, message } from 'antd';
+import { useSelector } from 'react-redux';
 import Markdown from 'markdown-to-jsx';
 import { format } from 'date-fns';
 
-import { getArticleId } from '../../service/requestService';
+import { deleteAnArticle, getArticleId } from '../../service/requestService';
 import Spinner from '../spin/spinner';
 
 import heart from './heart.svg';
@@ -23,7 +25,19 @@ const PostDescription = () => {
 };
 
 const Article = ({ article }) => {
-  console.log(article);
+  const navigate = useNavigate();
+  const userName = useSelector((state) => state.main.user.username);
+  const isCurrentUserArticle = userName === article.author.username;
+
+  const onDelete = (article) => {
+    console.log(article);
+    deleteAnArticle(article.slug).then((res) => {
+      if (res.status === 204) {
+        message.success('This post has been deleted');
+      }
+    });
+    navigate('/');
+  };
   return (
     <article className={s.postWrapper}>
       <div className={s.postContainer}>
@@ -48,18 +62,38 @@ const Article = ({ article }) => {
               /* eslint-disable */
             }
           </div>
+
           <p className={s.postDescription}>{article.description}</p>
         </div>
         <div className={s.user}>
           <div className={s.userInfo}>
-            <h6 className={s.name}>{article.author.username}</h6>
-            <p className={s.date}>{format(new Date(article.updatedAt), 'PP')}</p>
+            <div className={s.userNameDate}>
+              <h6 className={s.name}>{article.author.username}</h6>
+              <p className={s.date}>{format(new Date(article.updatedAt), 'PP')}</p>
+            </div>
+            <img
+              className={s.userAvatar}
+              src={article.author.image ? article.author.image : defaultAvatar}
+              alt="Avatar"
+            />
           </div>
-          <img
-            className={s.userAvatar}
-            src={article.author.image ? article.author.image : defaultAvatar}
-            alt="Avatar"
-          />
+          {isCurrentUserArticle && (
+            <div className={s.btnGroup}>
+              <Popconfirm
+                title="Delete the article"
+                description="Are you sure to delete this post?"
+                okText="Yes"
+                cancelText="No"
+                onConfirm={() => onDelete(article)}
+              >
+                <Button danger>Delete</Button>
+              </Popconfirm>
+              <Link to={`/articles/${article.slug}/edit`} className={s.btnEdit}>
+                {' '}
+                Edit
+              </Link>
+            </div>
+          )}
         </div>
       </div>
       <div className={s.postText}>

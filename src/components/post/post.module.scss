@@ -45,6 +45,9 @@
         }
         
         .postDescription{
+            line-height: 22px;
+            max-width: 780px;
+            overflow-wrap: break-word;
             text-align: start;
         }
     }

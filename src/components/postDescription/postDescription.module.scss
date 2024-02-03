@@ -55,34 +55,57 @@
         .user{
             display: flex;
             height: 46px;
-            flex-basis: 15%;
+            flex-basis: 35%;
+            flex-direction: column;
             .userInfo{
-                flex-direction: column;
-                margin-right: 12px;
-                .name{
-                    //font-family: Inter UI;
-                    font-size: 18px;
-                    line-height: 28px;
-                    letter-spacing: 0em;
-                    text-align: left;
+                display: flex;
+                justify-content: end;
+                margin-bottom: 40px;
+                .userNameDate{
+                    margin-right: 10px;
+                    .name{
+                        //font-family: Inter UI;
+                        font-size: 18px;
+                        line-height: 28px;
+                        letter-spacing: 0em;
+                        text-align: left;
+
+                    }
+                    .date{
+                        //font-family: Inter UI;
+                        font-size: 12px;
+                        line-height: 22px;
+                        letter-spacing: 0px;
+                        text-align: left;
+                        opacity: 50%;
+                    }
                 }
-                .date{
-                    //font-family: Inter UI;
-                    font-size: 12px;
-                    line-height: 22px;
-                    letter-spacing: 0px;
-                    text-align: left;
-                    opacity: 50%;
-                }
+
             }
             .userAvatar{
                 width: 46px;
                 height: 46px;
                 border-radius: 50%;
             }
+            .btnGroup{
+                display: flex;
+                justify-content: end;
+                .btnEdit{
+                    padding: 0 19px;
+                    text-decoration: none;
+                    border-radius: 5px;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center; 
+                    border: 1px solid $successColor;
+                    color: $successColor;
+                    margin-left: 10px;
+  
+                }
+            }
         }
     }
     .postText{
-        margin-left: 15px;
+        margin-left: 0px;
     }
 }

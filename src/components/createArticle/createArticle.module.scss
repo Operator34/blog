@@ -1,0 +1,113 @@
+@import "../../styles/variables";
+@import url('https://fonts.googleapis.com/css2?family=Inter&family=Roboto&display=swap');
+
+
+.article{
+    background-color: #fff;
+    width: 936px;
+    padding: 48px 32px;
+    border-radius: 6px;
+    box-shadow: $boxShadow;
+    font-family: 'Roboto', sans-serif;
+    .form{
+        display: flex;
+        flex-direction: column;
+        text-align: start;
+        .error{
+            color: $errorsColor;
+            font-size: 14px;
+            font-weight: 400;
+            line-height: 22px;
+
+        }
+        .inputGroup{
+            display: flex;
+            flex-direction: column;
+            .inputBtn{
+                display: flex;
+            }
+            .textTag{
+                
+                width: 300px;
+                border: 1px solid $inputGray;
+                color:black;
+                min-height: 40px;
+                border-radius: 6px;
+                padding-left: 5px;
+                margin-bottom: 10px;
+                display: flex;
+                align-items: center;
+                font-size: 13px;
+            }
+        .label{
+            font-family: "Roboto";
+            font-size: 14px;
+            font-weight: 400;
+            line-height: 22px;
+            letter-spacing: 0em;
+            text-align: left;
+        }
+        .input, textarea{
+            font-family: "Roboto";
+            font-size: 14px;
+            border: 1px solid $inputGray;
+            color:black;
+            min-height: 40px;
+            border-radius: 6px;
+            padding-left: 5px;
+            margin-bottom: 10px;
+            &:focus{
+                border-color: #007bff;
+                outline: none;
+                box-shadow: $boxShadow;
+            }
+        }
+        .textarea{
+            padding-top: 5px;
+        }
+        .inputTag{
+            width: 300px;
+        }
+        .btn{
+            width: 120px;
+            height: 41.6px;
+            margin-left: 10px ;
+            font-family: "Roboto";
+            font-size: 16px;
+            font-weight: 400;
+            line-height: 24px;
+            letter-spacing: 0em;
+            text-align: center;
+            &:active{
+                opacity: 70%;
+            }
+            &:disabled{
+                opacity: 50%;
+            }
+        }
+        .btnAdd{
+            color: $info-color;
+            border-color: $info-color;
+        }
+
+    }
+    .btnSend{
+        width: 319px;
+        height: 40px;
+        background-color: $info-color;
+        color: #fff;
+        border-radius: 5px;
+        border: 1px solid $info-color;
+        &:hover{
+            opacity: 80%;
+        }
+        &:active{
+            opacity: 80%;
+        }
+        &:disabled{
+            opacity: 50%;
+        }
+    }
+    }
+    
+}

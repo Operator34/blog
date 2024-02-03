@@ -12,8 +12,8 @@ import s from './postsList.module.scss';
 const PostsList = () => {
   const [articlesCount, setArticlesCount] = useState(1);
   const dispatch = useDispatch();
-  const dispatchArticles = (offset) => {
-    getAllArticles(offset).then((res) => {
+  const dispatchArticles = (offset, pageSize) => {
+    getAllArticles(offset, pageSize).then((res) => {
       //console.log(res.data.articles);
       dispatch(addAllArticles(res.data.articles));
       setArticlesCount(res.data.articlesCount.toString());
@@ -21,11 +21,6 @@ const PostsList = () => {
   };
   useEffect(() => {
     dispatchArticles();
-    // getAllArticles().then((res) => {
-    //   //console.log(res.data.articles);
-    //   dispatch(addAllArticles(res.data.articles));
-    //   setArticlesCount(res.data.articlesCount.toString());
-    // });
   }, []);
 
   const articles = useSelector((state) => state.main.articles);
@@ -36,10 +31,6 @@ const PostsList = () => {
   return (
     <div className={s.postsList}>
       {articles.length ? article : <Spinner />}
-      {/* <Post />
-      <Post />
-      <Post />
-      <PostDescription /> */}
       <PaginationPost articlesCount={articlesCount} dispatchArticles={dispatchArticles} />
     </div>
   );
@@ -48,11 +39,11 @@ export default PostsList;
 export const PaginationPost = ({ articlesCount, dispatchArticles }) => {
   return (
     <Pagination
-      pageSize={20}
-      defaultCurrent={1}
+      showSizeChanger
+      defaultCurrent={0}
       total={articlesCount}
       onChange={(page, pageSize) => {
-        dispatchArticles(page + pageSize);
+        dispatchArticles(page, pageSize);
       }}
     />
   );
