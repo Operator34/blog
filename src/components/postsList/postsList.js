@@ -23,9 +23,11 @@ const PostsList = () => {
   }, []);
 
   const articles = useSelector((state) => state.main.articles);
+  console.log(articles);
+
   let article = {};
   if (articles.length) {
-    article = articles.map((article, index) => <Post key={index} article={article} />);
+    article = articles.map((article, index) => <Post key={article.slug} article={article} />);
   }
   return (
     <div className={s.postsList}>

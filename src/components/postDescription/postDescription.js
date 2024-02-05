@@ -1,16 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams, Link } from 'react-router-dom';
 import { Button, Popconfirm, message } from 'antd';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import Markdown from 'markdown-to-jsx';
 import { format } from 'date-fns';
 
 import { deleteAnArticle, getArticleId, errorHandling, toggleFavoriteArticle } from '../../service/requestService';
+import { isFavorite } from '../../store/mainReducer';
 import Spinner from '../spin/spinner';
 
 import heart from './heart.svg';
 import heartOn from './heartOn.svg';
-
 import defaultAvatar from './defaultAvatar.png';
 import s from './postDescription.module.scss';
 
@@ -26,17 +26,25 @@ const PostDescription = () => {
 };
 
 const Article = ({ article }) => {
+  console.log('article postDescription', article);
+  const dispatch = useDispatch();
   const [likeCount, setLikeCount] = useState(article.favoritesCount);
   const [like, setLike] = useState(article.favorited);
   const navigate = useNavigate();
   const userName = useSelector((state) => state.main.user.username);
   const isCurrentUserArticle = userName === article.author.username;
 
+  const imgLike = like ? heartOn : heart;
   const onClickFavorite = (slug) => {
     const method = like ? 'delete' : 'post';
-    toggleFavoriteArticle(slug, method).then((res) => console.log(res));
-    setLikeCount((prev) => (prev = like ? prev - 1 : prev + 1));
-    setLike((prev) => !prev);
+    toggleFavoriteArticle(slug, method).then((res) => {
+      console.log(res);
+      if (res.status === 200) {
+        setLikeCount((prev) => (prev = like ? prev - 1 : prev + 1));
+        setLike((prev) => !prev);
+        dispatch(isFavorite(slug));
+      }
+    });
   };
 
   const onDelete = (article) => {
@@ -50,7 +58,6 @@ const Article = ({ article }) => {
     navigate('/');
   };
 
-  const imgLike = like ? heartOn : heart;
   return (
     <article className={s.postWrapper}>
       <div className={s.postContainer}>

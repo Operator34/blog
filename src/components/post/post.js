@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import { format } from 'date-fns';
 import { Link } from 'react-router-dom';
+import { useSelector, useDispatch } from 'react-redux';
 
 import { conversionStr } from '../../service/helpFunction';
 import { toggleFavoriteArticle } from '../../service/requestService';
+import { isFavorite } from '../../store/mainReducer';
 
 import defaultAvatar from './defaultAvatar.png';
 import heart from './heart.svg';
@@ -11,17 +13,20 @@ import heartOn from './heartOn.svg';
 import s from './post.module.scss';
 
 const Post = ({ article }) => {
-  const [likeCount, setLikeCount] = useState(article.favoritesCount);
-  const [like, setLike] = useState(article.favorited);
+  const isLogged = useSelector((state) => state.main.isLogged);
+  const like = article.favorited;
+  const dispatch = useDispatch();
   const { tagList = [] } = article;
   const articleTagList = tagList.filter((tag, index) => index < 10);
   const imgLike = like ? heartOn : heart;
 
   const onClickFavorite = (slug) => {
     const method = like ? 'delete' : 'post';
-    toggleFavoriteArticle(slug, method).then((res) => console.log(res));
-    setLikeCount((prev) => (prev = like ? prev - 1 : prev + 1));
-    setLike((prev) => !prev);
+    toggleFavoriteArticle(slug, method).then((res) => {
+      if (res.status === 200) {
+        dispatch(isFavorite(slug));
+      }
+    });
   };
 
   return (
@@ -33,10 +38,10 @@ const Post = ({ article }) => {
               {conversionStr(article.title, 65)}
             </Link>
           </p>
-          <button onClick={() => onClickFavorite(article.slug)} className={s.btn}>
+          <button disabled={!isLogged} onClick={() => onClickFavorite(article.slug)} className={s.btn}>
             <img className={s.heartOn} src={imgLike} alt="Like" />
           </button>
-          <p className={s.countLike}>{likeCount}</p>
+          <p className={s.countLike}>{article.favoritesCount}</p>
         </div>
         <div className={s.tags}>
           {
