@@ -7,6 +7,10 @@
   min-height: 100%;
   padding-bottom: 30px;
   //font-size: $mainFontSize;
-
+  @media screen and (max-width: 768px) {
+    display: flex;
+    flex-direction: column;
+    margin: 0 10px;
+  }
   
 }
