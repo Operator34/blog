@@ -24,8 +24,13 @@ export const getAllArticles = (page = 1, limit = 10) => {
       num = page * limit - limit + 1;
       break;
   }
+  console.log(Cookies.get('Token_Authorization'));
   return axios
-    .get(`${apiBase}/articles?limit=${limit}&offset=${num}`, { headers })
+    .get(`${apiBase}/articles?limit=${limit}&offset=${num}`, {
+      headers: {
+        Authorization: `Token ${Cookies.get('Token_Authorization')}`,
+      },
+    })
     .then((res) => {
       return res;
     })
@@ -53,11 +58,13 @@ export const registerUser = (username, email, password) => {
       user: { username, email, password },
     })
     .then((res) => {
+      if (res.status === 200) {
+        message.success('Registration was successful');
+      }
       return res;
     })
     .catch((err) => {
-      console.error('Error in registerUser:', err);
-      throw err;
+      return err;
     });
 };
 
@@ -171,36 +178,6 @@ export const deleteAnArticle = (slug) => {
       return err;
     });
 };
-
-// export const favoriteAnArticle = (slug) => {
-//   return axios
-//     .post(
-//       `${apiBase}/articles/${slug}/favorite`,
-//       {},
-//       {
-//         headers: {
-//           Authorization: `Token ${Cookies.get('Token_Authorization')}`,
-//         },
-//       }
-//     )
-//     .then((res) => res)
-//     .catch((err) => err);
-// };
-
-// export const unFavoriteAnArticle = (slug) => {
-//   return axios
-//     .delete(
-//       `${apiBase}/articles/${slug}/favorite`,
-//       {},
-//       {
-//         headers: {
-//           Authorization: `Token ${Cookies.get('Token_Authorization')}`,
-//         },
-//       }
-//     )
-//     .then((res) => res)
-//     .catch((err) => err);
-// };
 
 export const toggleFavoriteArticle = (slug, method) => {
   const requestConfig = {

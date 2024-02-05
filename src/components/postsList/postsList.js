@@ -1,33 +1,32 @@
 import React, { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 import { Pagination } from 'antd';
+import { useSelector } from 'react-redux';
 
 import Spinner from '../spin/spinner';
 import Post from '../post/post';
 import { getAllArticles } from '../../service/requestService';
-import { addAllArticles } from '../../store/mainReducer';
 
 import s from './postsList.module.scss';
 
 const PostsList = () => {
+  const isLogged = useSelector((state) => state.main.isLogged);
+  console.log(isLogged);
   const [articlesCount, setArticlesCount] = useState(1);
-  const dispatch = useDispatch();
+  const [articles, setArticles] = useState([]);
+
   const dispatchArticles = (offset, pageSize) => {
     getAllArticles(offset, pageSize).then((res) => {
-      dispatch(addAllArticles(res.data.articles));
+      setArticles(res.data.articles);
       setArticlesCount(res.data.articlesCount.toString());
     });
   };
   useEffect(() => {
     dispatchArticles();
-  }, []);
-
-  const articles = useSelector((state) => state.main.articles);
-  console.log(articles);
+  }, [isLogged]);
 
   let article = {};
   if (articles.length) {
-    article = articles.map((article, index) => <Post key={article.slug} article={article} />);
+    article = articles.map((article) => <Post key={article.slug} article={article} isLogged={isLogged} />);
   }
   return (
     <div className={s.postsList}>

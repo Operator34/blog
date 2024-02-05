@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams, Link } from 'react-router-dom';
 import { Button, Popconfirm, message } from 'antd';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 import Markdown from 'markdown-to-jsx';
 import { format } from 'date-fns';
 
 import { deleteAnArticle, getArticleId, errorHandling, toggleFavoriteArticle } from '../../service/requestService';
-import { isFavorite } from '../../store/mainReducer';
 import Spinner from '../spin/spinner';
 
 import heart from './heart.svg';
@@ -17,32 +16,29 @@ import s from './postDescription.module.scss';
 const PostDescription = () => {
   const { slug } = useParams();
   const [article, setArticle] = useState(null);
+  const isLogged = useSelector((state) => state.main.isLogged);
   useEffect(() => {
     getArticleId(slug).then((res) => {
       setArticle(res.data.article);
     });
   }, []);
-  return <>{article ? <Article article={article} /> : <Spinner />}</>;
+  return <>{article ? <Article article={article} isLogged={isLogged} /> : <Spinner />}</>;
 };
 
-const Article = ({ article }) => {
-  console.log('article postDescription', article);
-  const dispatch = useDispatch();
+const Article = ({ article, isLogged }) => {
   const [likeCount, setLikeCount] = useState(article.favoritesCount);
   const [like, setLike] = useState(article.favorited);
   const navigate = useNavigate();
   const userName = useSelector((state) => state.main.user.username);
   const isCurrentUserArticle = userName === article.author.username;
 
-  const imgLike = like ? heartOn : heart;
+  const imgLike = like && isLogged ? heartOn : heart;
   const onClickFavorite = (slug) => {
     const method = like ? 'delete' : 'post';
     toggleFavoriteArticle(slug, method).then((res) => {
-      console.log(res);
       if (res.status === 200) {
         setLikeCount((prev) => (prev = like ? prev - 1 : prev + 1));
         setLike((prev) => !prev);
-        dispatch(isFavorite(slug));
       }
     });
   };
@@ -63,7 +59,7 @@ const Article = ({ article }) => {
       <div className={s.postContainer}>
         <div className={s.post}>
           <div className={s.titleLike}>
-            <p className={s.title}>{article.title}</p>
+            <div className={s.title}>{article.title}</div>
             <button onClick={() => onClickFavorite(article.slug)} className={s.btn}>
               <img src={imgLike} alt="Like" />
               <p className={s.countLike}>{likeCount}</p>
@@ -117,7 +113,7 @@ const Article = ({ article }) => {
         </div>
       </div>
       <div className={s.postText}>
-        <p>{<Markdown>{article.body}</Markdown>}</p>
+        <div>{<Markdown>{article.body}</Markdown>}</div>
       </div>
     </article>
   );

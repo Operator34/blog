@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { Checkbox } from 'antd';
 
-import { registerUser } from '../../service/requestService';
+import { errorHandling, registerUser } from '../../service/requestService';
 
 import s from './signUp.module.scss';
 
@@ -24,8 +24,9 @@ const SignUp = () => {
   const onSubmit = (data) => {
     const { userName, email, password } = data;
     registerUser(userName, email, password).then((res) => {
-      console.log(res);
-      if (res.status === 200) {
+      if (res instanceof Error) {
+        errorHandling(res);
+      } else {
         navigate('/sign-in');
       }
     });
