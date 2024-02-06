@@ -42,7 +42,11 @@ export const getAllArticles = (page = 1, limit = 10) => {
 
 export const getArticleId = (id) => {
   return axios
-    .get(`${apiBase}/articles/${id}`, { headers })
+    .get(`${apiBase}/articles/${id}`, {
+      headers: {
+        Authorization: `Token ${Cookies.get('Token_Authorization')}`,
+      },
+    })
     .then((res) => {
       return res;
     })

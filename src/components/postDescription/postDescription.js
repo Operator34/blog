@@ -18,7 +18,9 @@ const PostDescription = () => {
   const [article, setArticle] = useState(null);
   const isLogged = useSelector((state) => state.main.isLogged);
   useEffect(() => {
+    console.log('useEffect');
     getArticleId(slug).then((res) => {
+      console.log(res.data.article);
       setArticle(res.data.article);
     });
   }, []);
@@ -26,6 +28,7 @@ const PostDescription = () => {
 };
 
 const Article = ({ article, isLogged }) => {
+  console.log(article, isLogged);
   const [likeCount, setLikeCount] = useState(article.favoritesCount);
   const [like, setLike] = useState(article.favorited);
   const navigate = useNavigate();
